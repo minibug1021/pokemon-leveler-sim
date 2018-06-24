@@ -2,7 +2,10 @@
 
 Todo:
 ---
-Make it work for every generation.
-Add more routes as well as move them to a seperate file.
-Add time estimates for leveling.
-Maybe make a GUI?
+1. Make it work for every generation.
+
+2. Add more routes as well as move them to a seperate file.
+
+3. Add time estimates for leveling.
+
+4. Maybe make a GUI?
