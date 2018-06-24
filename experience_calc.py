@@ -120,7 +120,7 @@ def fluctuating(n):
 # this is the stuff that prints out the statistics. 
 # assuming all the required stuff was filled it, this should print out the total number of pokemon fainted and what the distribution of them was.
 # todo: add estimates for how much time it will take 
-while level != 51:
+while level != 100: #change this level to whatever the goal should be
         xp_gained += earned_exp(level)
         while xp_gained > to_next_level(level):
                 xp_gained -= to_next_level(level)
