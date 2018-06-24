@@ -1,20 +1,25 @@
+#note: this only works for gen vii right now, that's on my todo list.
 from random import choice
 from itertools import chain
 import random, json, math
+path_to_files = r'C:\Users\minibug\Desktop\python stuff'
+#replace this with the filepath to the directory this (and the other 3 files) are contained in. i left mine here as an example.
 
-route_one = [{'Caterpie':10,'Metapod':10,'Ledyba':10,'Bonsly':15,'Munchlax':5,'Pikipek':20,'Yungoos':30},{'Caterpie':10,'Metapod':10,'Rattata':30,'Spinarak':10,'Bonsly':15,'Munchlax':5,'Pikipek':20}]
-base_exp = {'Caterpie':39,'Metapod':72,'Ledyba':53,'Bonsly':58,'Munchlax':78,'Pikipek':53,'Yungoos':51,'Rattata':51,'Spinarak':50}
+#todo: add more routes and move them into a seperate file
+route_one = [{'Caterpie':10,'Metapod':10,'Ledyba':10,'Bonsly':15,'Munchlax':5,'Pikipek':20,'Yungoos':30},{'Caterpie':10,'Metapod':10,'Rattata':30,'Spinarak':10,'Bonsly':15,'Munchlax':5,'Pikipek':20},[10,11,12,13]]
 
-lucky_egg = 1.5
-affection = 1.2
-trade_status = 1.5
-pokemon = 'Magby'
-level = 10
-xp_gained = 0
-route_sel = route_one
-xp_share = 1
+#these are really the only things you have to change manually, since they can't be predicted based on other things.
+lucky_egg = 1.5 #lucky egg equipped = 1.5, else 1
+affection = 1.2 #above two hearts in refresh = 1.2, else 1
+trade_status = 1.5 #not traded = 1, traded nationally = 1.5, traded internationally = 1.7
+pokemon = 'Exeggcute' #case-sensitive
+level = 50
+xp_gained = 0 #leave this at 0
+route_sel = route_one #put the route here. right now i only have alola route one, but it's not hard to add new ones.
+xp_share = 1 #if we are calculating for a pokemon receiving experience through the xp share, set to 2. else, 1
+
 global killed
-killed = {}
+killed = {} #dont touch this
 
 
 def exp(base,lucky_egg,affection,enemy_level,victor_level,trade_status,able_to_evolve,xp_share):
@@ -28,12 +33,12 @@ def exp(base,lucky_egg,affection,enemy_level,victor_level,trade_status,able_to_e
 	return(math.floor(final))
 	
 def random_poke(route):
-        #day_or_night = random.choice(route)
-        day = route[0]
+        #day_or_night = random.choice(route) #this is commented out right now and is currently hard-coded to always be day.
+        day = route[0] #if you want it to be night, just set this to 1
         return(choice(list(chain(*([k] * v for k, v in day.items())))))
 	
 def evolve_levels_check(pokemon):
-	with open(r"C:\Users\minibug\Desktop\python stuff\evolve_levels.json",'r',encoding='utf-8') as f:
+	with open(r"{}\evolve_levels.json".format(path_to_files),'r',encoding='utf-8') as f:
 		data = json.load(f)
 	try:
 		if data[pokemon] > level:
@@ -43,18 +48,23 @@ def evolve_levels_check(pokemon):
 	except:
 		return(1)
 		
-def rate_check(pokemon):
-	with open(r"C:\Users\minibug\Desktop\python stuff\exp_groups.json",'r',encoding='utf-8') as f:
+def rate_check(pokemon): 
+	with open(r"{}\exp_groups.json".format(path_to_files),'r',encoding='utf-8') as f:
 		data = json.load(f)
 	return(data[pokemon])
-		
-def earned_exp(victor_level):
+	
+def check_yield(pokemon):
+	with open(r"{}\exp_yields.json".format(path_to_files),'r',encoding='utf-8') as f:
+		data = json.load(f)
+	return(data[pokemon])
+	
+def earned_exp(victor_level): #determines how much experience you earn for fighting a random pokemon on the given route.
 	poke = random_poke(route_sel)
 	try:
 		killed[poke]+=1
 	except:
 		killed[poke] = 1
-	return(exp(base_exp[poke],lucky_egg,affection,random.choice([10,11,12,13]),victor_level,trade_status,evolve_levels_check(pokemon),xp_share))
+	return(exp(check_yield(poke),lucky_egg,affection,random.choice(route_sel[2]),victor_level,trade_status,evolve_levels_check(pokemon),xp_share))
 
 def exp_at_level(rate,level):
 	if rate == 'Erratic':
@@ -107,15 +117,18 @@ def fluctuating(n):
 	else:
 		return(math.floor((n**3)*(((math.floor(n/2)+32)/50))))
 		
-def grind():
-        while level != 100:
-                xp_gained += earned_exp(level)
-                while xp_gained > to_next_level(level):
-                        xp_gained -= to_next_level(level)
-                        level+=1
-                        print(level)
-        x = ['{}\t{}\n'.format(key, killed[key]) for key in killed]
-        print(''.join(x))
-        a = 0
-        for key in killed:
-                a+=killed[key]
+# this is the stuff that prints out the statistics. 
+# assuming all the required stuff was filled it, this should print out the total number of pokemon fainted and what the distribution of them was.
+# todo: add estimates for how much time it will take 
+while level != 51:
+        xp_gained += earned_exp(level)
+        while xp_gained > to_next_level(level):
+                xp_gained -= to_next_level(level)
+                level+=1
+                print(level)
+x = ['{}\t{}\n'.format(key, killed[key]) for key in killed]
+print(''.join(x))
+a = 0
+for key in killed:
+        a+=killed[key]
+print('{} total pokemon fainted'.format(a))
