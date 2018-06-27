@@ -1,5 +1,8 @@
 # pokemon-leveler-sim
 
+required libraries
+PyQt5
+
 Todo:
 ---
 1. Make it work for every generation.
