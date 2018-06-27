@@ -2,23 +2,21 @@
 from random import choice
 from itertools import chain
 import random, json, math
-path_to_files = r'C:\Users\minibug\Desktop\python stuff'
+path_to_files = r'C:\Users\minibug\Desktop\python stuff\leveler-sim'
 #replace this with the filepath to the directory this (and the other 3 files) are contained in. i left mine here as an example.
 
 #todo: add more routes and move them into a seperate file
-route_one = [{'Caterpie':10,'Metapod':10,'Ledyba':10,'Bonsly':15,'Munchlax':5,'Pikipek':20,'Yungoos':30},{'Caterpie':10,'Metapod':10,'Rattata':30,'Spinarak':10,'Bonsly':15,'Munchlax':5,'Pikipek':20},[10,11,12,13]]
 
-#these are really the only things you have to change manually, since they can't be predicted based on other things.
+
+
 lucky_egg = 1.5 #lucky egg equipped = 1.5, else 1
 affection = 1.2 #above two hearts in refresh = 1.2, else 1
 trade_status = 1.5 #not traded = 1, traded nationally = 1.5, traded internationally = 1.7
 pokemon = 'Exeggcute' #case-sensitive
 level = 50
-xp_gained = 0 #leave this at 0
-route_sel = route_one #put the route here. right now i only have alola route one, but it's not hard to add new ones.
+xp_gained = 0 #leave this at 0 #put the route here. right now i only have alola route one, but it's not hard to add new ones.
 xp_share = 1 #if we are calculating for a pokemon receiving experience through the xp share, set to 2. else, 1
 
-global killed
 killed = {} #dont touch this
 
 
@@ -120,15 +118,51 @@ def fluctuating(n):
 # this is the stuff that prints out the statistics. 
 # assuming all the required stuff was filled it, this should print out the total number of pokemon fainted and what the distribution of them was.
 # todo: add estimates for how much time it will take 
-while level != 100: #change this level to whatever the goal should be
-        xp_gained += earned_exp(level)
-        while xp_gained > to_next_level(level):
-                xp_gained -= to_next_level(level)
-                level+=1
-                print(level)
-x = ['{}\t{}\n'.format(key, killed[key]) for key in killed]
-print(''.join(x))
-a = 0
-for key in killed:
-        a+=killed[key]
-print('{} total pokemon fainted'.format(a))
+def grind(route_sal,lucky_egg,affection,trade_status,pokemon,level,target_level):
+	print('\n\n\n')
+	print('Grinding {} from level {} to level {}'.format(pokemon,level,target_level))
+	global xp_gained
+	global route_sel
+	global killed
+	route_sel = route_sal
+	while level != target_level: #change this level to whatever the goal should be
+		xp_gained += earned_exp(level)
+		while xp_gained > to_next_level(level):
+			xp_gained -= to_next_level(level)
+			level+=1
+			print('Level', level, 'reached')
+	print('---')
+	x = ['{}\t{}\n'.format(key, killed[key]) for key in killed]
+	print(''.join(x))
+	a = 0
+	for key in killed:
+		a+=killed[key]
+	print('{} total pokemon fainted'.format(a))
+	killed = {}
+	
+	
+	
+def route_convert(route):
+	with open(r"{}\routes.json".format(path_to_files),'r',encoding='utf-8') as f:
+		data = json.load(f)
+	return(data[route])
+
+def egg_convert(egg):
+        egg_dict = {
+                "Lucky Egg Equipped":1.5,
+                "Lucky Egg Not Equipped":1
+                }
+        return(egg_dict[egg])
+def affec_convert(affec):
+        affec_dict = {
+                "Below 2 Hearts":1,
+                "2 Hearts or Above":1.2
+                }
+        return(affec_dict[affec])
+def stat_convert(stat):
+        stat_dict = {
+                "Not Traded":1,
+                "Traded Nationally":1.5,
+                "Traded Internationally":1.7
+                }
+        return(stat_dict[stat])
