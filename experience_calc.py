@@ -119,7 +119,7 @@ def fluctuating(n):
 # assuming all the required stuff was filled it, this should print out the total number of pokemon fainted and what the distribution of them was.
 # todo: add estimates for how much time it will take 
 def grind(route_sal,lucky_egg,affection,trade_status,pokemon,level,target_level):
-	print('\n\n\n')
+	print('\n'*100)
 	print('Grinding {} from level {} to level {}'.format(pokemon,level,target_level))
 	global xp_gained
 	global route_sel
