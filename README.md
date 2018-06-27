@@ -1,6 +1,7 @@
 # pokemon-leveler-sim
 
 required libraries
+
 PyQt5
 
 Todo:
