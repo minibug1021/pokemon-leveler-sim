@@ -15,14 +15,6 @@ class Ui_MainWindow(object):
         self.route.setObjectName("route")
         self.route.addItem("")
         self.route.addItem("")
-        self.level = QtWidgets.QComboBox(self.centralwidget)
-        self.level.setGeometry(QtCore.QRect(20, 160, 281, 31))
-        self.level.setObjectName("level")
-        self.level.addItem("")
-        self.level_2 = QtWidgets.QComboBox(self.centralwidget)
-        self.level_2.setGeometry(QtCore.QRect(20, 190, 281, 31))
-        self.level_2.setObjectName("level_2")
-        self.level_2.addItem("")
         self.pokemon = QtWidgets.QComboBox(self.centralwidget)
         self.pokemon.setGeometry(QtCore.QRect(20, 130, 281, 31))
         self.pokemon.setObjectName("pokemon")
@@ -47,6 +39,14 @@ class Ui_MainWindow(object):
         self.luckyegg.addItem("")
         self.luckyegg.addItem("")
         self.luckyegg.addItem("")
+        
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(100, 169, 71, 31))
+        self.label.setObjectName("label")
+        self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_2.setGeometry(QtCore.QRect(110, 209, 51, 16))
+        self.label_2.setObjectName("label_2")
+        
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 318, 21))
@@ -58,19 +58,33 @@ class Ui_MainWindow(object):
         self.pushButton.clicked.connect(self.button)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        self.level = QtWidgets.QSpinBox(self.centralwidget)
+        self.level.setGeometry(QtCore.QRect(170, 169, 42, 31))
+        self.level.setAccelerated(True)
+        self.level.setMinimum(1)
+        self.level.setMaximum(100)
+        self.level.setObjectName("level")
+        self.level_2 = QtWidgets.QSpinBox(self.centralwidget)
+        self.level_2.setGeometry(QtCore.QRect(170, 200, 42, 31))
+        self.level_2.setAccelerated(True)
+        self.level_2.setMinimum(1)
+        self.level_2.setMaximum(100)
+        self.level_2.setObjectName("level_2")
+        MainWindow.setCentralWidget(self.centralwidget)
+
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
 
     def retranslateUi(self, MainWindow):
-
+    
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Pokemon Level Sim"))
         self.pushButton.setText(_translate("MainWindow", "All Options Set"))
         self.route.setCurrentText(_translate("MainWindow", "Select a Route"))
         self.route.setItemText(0, _translate("MainWindow", "Select a Route"))
         self.route.setItemText(1, _translate("MainWindow", "(Alola) Route One"))
-        self.level.setItemText(0, _translate("MainWindow", "Select Level"))
-        self.level.setEditable(True)
-        self.level_2.setEditable(True)
         self.pokemon.setItemText(0, _translate("MainWindow", "Select Pokemon"))
         self.pokemon.setItemText(1, _translate("MainWindow", "Bulbasaur"))
         self.pokemon.setItemText(2, _translate("MainWindow", "Ivysaur"))
@@ -890,7 +904,9 @@ class Ui_MainWindow(object):
         self.luckyegg.setItemText(0, _translate("MainWindow", "Select Lucky Egg"))
         self.luckyegg.setItemText(1, _translate("MainWindow", "Lucky Egg Equipped"))
         self.luckyegg.setItemText(2, _translate("MainWindow", "Lucky Egg Not Equipped"))
-        self.level_2.setItemText(0, _translate("MainWindow", "Select Goal Level"))
+
+        self.label.setText(_translate("MainWindow", "Starting Level"))
+        self.label_2.setText(_translate("MainWindow", "Goal Level"))
         
 
     def button(self):
@@ -899,14 +915,14 @@ class Ui_MainWindow(object):
         print(str(self.affection.currentText()))
         print(str(self.tradestatus.currentText()))
         print(str(self.pokemon.currentText()))
-        print('Level',str(self.level.currentText()))
+        print('Level',str(self.level.value()))
         grind(route_convert(str(self.route.currentText())),
               egg_convert(str(self.luckyegg.currentText())),
               affec_convert(str(self.affection.currentText())),
               stat_convert(str(self.tradestatus.currentText())),
               str(self.pokemon.currentText()),
-              int(self.level.currentText()),
-              int(self.level_2.currentText()))
+              self.level.value(),
+              self.level_2.value())
 
 if __name__ == "__main__":
     import sys
