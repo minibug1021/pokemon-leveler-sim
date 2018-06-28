@@ -125,7 +125,7 @@ def grind(route_sal,lucky_egg,affection,trade_status,pokemon,level,target_level)
 	global route_sel
 	global killed
 	route_sel = route_sal
-	while level != target_level: #change this level to whatever the goal should be
+	while level < target_level: #change this level to whatever the goal should be
 		xp_gained += earned_exp(level)
 		while xp_gained > to_next_level(level):
 			xp_gained -= to_next_level(level)
